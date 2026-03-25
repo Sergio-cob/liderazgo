@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación de Liderazgo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root {
+    --bg: #f7f4ef;
+    --surface: #ffffff;
+    --surface2: #f0ece4;
+    --border: #e0d9ce;
+    --accent: #2d4a3e;
+    --accent2: #8b6914;
+    --text: #1a1a1a;
+    --muted: #8a8070;
+    --danger: #c0392b;
+    --success: #2d7a4f;
+    --warn: #b07d1a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--accent);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  }
+
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #f0ece4;
+    letter-spacing: 0.04em;
+  }
+
+  .auth-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 6px 14px 6px 6px;
+    font-size: 0.8rem;
+    color: #d4cfc6;
+  }
+
+  .user-pill img {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+
+  .btn-signout {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #d4cfc6;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-signout:hover { background: rgba(255,255,255,0.2); }
+
+  /* TABS */
+  .nav-tabs {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    padding: 0 40px;
+    gap: 0;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 500;
+    padding: 14px 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* LOGIN SCREEN */
+  #loginScreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 64px);
+    padding: 40px;
+  }
+
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 56px 48px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+  }
+
+  .login-icon {
+    width: 64px; height: 64px;
+    background: var(--accent);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 1.8rem;
+  }
+
+  .login-card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .login-card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 20px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .google-btn:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+
+  .google-btn svg { flex-shrink: 0; }
+
+  /* MAIN APP */
+  #mainApp { display: none; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* FORM */
+  .form-wrap {
+    max-width: 740px;
+    margin: 36px auto;
+    padding: 0 24px 60px;
+  }
+
+  .form-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+
+  .form-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.02em;
+  }
+
+  .field-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .field-group.single { grid-template-columns: 1fr; }
+
+  label {
+    display: block;
+    font-size: 0.73rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  input[type="text"], input[type="date"], textarea, select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(45,74,62,0.08);
+    background: var(--surface);
+  }
+
+  .dimension-block { margin-bottom: 28px; }
+
+  .dimension-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dimension-title::before {
+    content: '';
+    display: inline-block;
+    width: 18px; height: 2px;
+    background: var(--accent2);
+    border-radius: 1px;
+  }
+
+  .question-item {
+    margin-bottom: 12px;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border-left: 3px solid var(--border);
+    transition: border-color 0.2s;
+  }
+
+  .question-item:focus-within { border-left-color: var(--accent); }
+
+  .question-text {
+    font-size: 0.86rem;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.55;
+  }
+
+  .likert-scale { display: flex; gap: 8px; }
+
+  .likert-wrap { width: 100%; }
+
+  .likert-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+
+  .likert-label { font-size: 0.67rem; color: var(--muted); }
+
+  .likert-btn {
+    width: 42px; height: 42px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .likert-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .likert-btn[data-val="1"].selected { background: #c0392b; border-color: #c0392b; color: white; }
+  .likert-btn[data-val="2"].selected { background: #c07030; border-color: #c07030; color: white; }
+  .likert-btn[data-val="3"].selected { background: #8a7a50; border-color: #8a7a50; color: white; }
+  .likert-btn[data-val="4"].selected { background: #3a7a5a; border-color: #3a7a5a; color: white; }
+  .likert-btn[data-val="5"].selected { background: var(--success); border-color: var(--success); color: white; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent);
+    color: #f0ece4;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 8px;
+  }
+
+  .submit-btn:hover { opacity: 0.9; }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* DATA TAB */
+  .data-wrap {
+    max-width: 1000px;
+    margin: 36px auto;
+    padding: 0 24px 60px;
+  }
+
+  .data-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .data-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .btn-secondary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); }
+
+  .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-bar select { width: auto; min-width: 200px; }
+
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+
+  .records-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+
+  .records-table th {
+    text-align: left;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+
+  .records-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--surface2);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .records-table tr:last-child td { border-bottom: none; }
+  .records-table tr:hover td { background: var(--surface2); }
+
+  .score-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+
+  .score-high { background: rgba(45,122,79,0.12); color: var(--success); }
+  .score-mid { background: rgba(139,105,20,0.12); color: var(--accent2); }
+  .score-low { background: rgba(192,57,43,0.12); color: var(--danger); }
+
+  /* COMPARE */
+  .compare-wrap {
+    max-width: 960px;
+    margin: 36px auto;
+    padding: 0 24px 60px;
+  }
+
+  .compare-header { margin-bottom: 28px; }
+
+  .compare-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .compare-header p { font-size: 0.84rem; color: var(--muted); }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 18px;
+  }
+
+  .leader-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+
+  .leader-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+
+  .eval-count { font-size: 0.74rem; color: var(--muted); margin-bottom: 18px; }
+
+  .dim-bar-row { margin-bottom: 11px; }
+
+  .dim-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.74rem;
+    margin-bottom: 4px;
+  }
+
+  .dim-bar-label span:first-child { color: var(--muted); }
+  .dim-bar-label span:last-child { color: var(--text); font-weight: 500; }
+
+  .dim-bar-track {
+    height: 5px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .dim-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.7s ease;
+  }
+
+  .overall-score {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .overall-score span:first-child {
+    font-size: 0.74rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .overall-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  /* STATUS */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.83rem;
+    margin-bottom: 16px;
+  }
+
+  .status-bar.info { background: rgba(45,74,62,0.08); color: var(--accent); }
+  .status-bar.error { background: rgba(192,57,43,0.08); color: var(--danger); }
+  .status-bar.success { background: rgba(45,122,79,0.08); color: var(--success); }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .empty-state p { font-size: 0.88rem; }
+
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--accent);
+    color: #f0ece4;
+    padding: 13px 22px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.88rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 999;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.error { background: var(--danger); }
+
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 600px) {
+    .field-group { grid-template-columns: 1fr; }
+    header { padding: 0 16px; }
+    .nav-tabs { padding: 0 16px; overflow-x: auto; }
+    .form-wrap, .data-wrap, .compare-wrap { padding: 0 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Evaluación de Liderazgo</h1>
+  <div class="auth-area" id="authArea">
+    <button class="google-btn" id="loginHeaderBtn" onclick="signIn()" style="padding:8px 16px;font-size:0.8rem;width:auto;border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#f0ece4;">
+      Iniciar sesión con Google
+    </button>
+  </div>
+</header>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-icon">📋</div>
+    <h2>Evaluación de Liderazgo</h2>
+    <p>Registra y compara evaluaciones de liderazgo acumuladas en el tiempo. Los datos se guardan directamente en tu Google Sheets.</p>
+    <button class="google-btn" onclick="signIn()">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 01-7.18-2.54H1.83v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 010-3.04V5.41H1.83a8 8 0 000 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.31z"/></svg>
+      Continuar con Google
+    </button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp">
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('form', this)">Nueva Evaluación</button>
+    <button class="tab-btn" onclick="showTab('data', this)">Registros</button>
+    <button class="tab-btn" onclick="showTab('compare', this)">Comparar</button>
+  </div>
+
+  <!-- FORM TAB -->
+  <div id="tab-form" class="tab-content active">
+    <div class="form-wrap">
+      <div id="formStatus"></div>
+
+      <div class="form-section">
+        <h2>Contexto de la Entrevista</h2>
+        <div class="field-group">
+          <div>
+            <label>Código o nombre del líder evaluado</label>
+            <input type="text" id="leaderName" placeholder="Ej. Jefe A, Manager01...">
+          </div>
+          <div>
+            <label>Fecha de la entrevista</label>
+            <input type="date" id="evalDate">
+          </div>
+        </div>
+        <div class="field-group">
+          <div>
+            <label>Rol o área del entrevistado</label>
+            <input type="text" id="intervieweeRole" placeholder="Ej. Analista, Coordinador...">
+          </div>
+          <div>
+            <label>Organización / Empresa</label>
+            <input type="text" id="orgName" placeholder="Opcional">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>Dimensiones de Liderazgo</h2>
+        <p style="font-size:0.8rem;color:var(--muted);margin-bottom:20px;">Escala: 1 = Muy deficiente &nbsp;·&nbsp; 5 = Excelente</p>
+        <div id="questionsContainer"></div>
+      </div>
+
+      <div class="form-section">
+        <h2>Observaciones</h2>
+        <div class="field-group single">
+          <div>
+            <label>Notas cualitativas (opcional)</label>
+            <textarea id="notes" rows="3" placeholder="Comentarios, contexto adicional..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="saveEvaluation()">Guardar en Google Sheets</button>
+    </div>
+  </div>
+
+  <!-- DATA TAB -->
+  <div id="tab-data" class="tab-content">
+    <div class="data-wrap">
+      <div class="data-header">
+        <h2>Registros de Evaluación</h2>
+        <button class="btn-secondary" onclick="loadData()">↻ Actualizar</button>
+      </div>
+      <div class="filter-bar">
+        <select id="filterLeader" onchange="renderTable()">
+          <option value="">Todos los líderes</option>
+        </select>
+      </div>
+      <div id="tableContainer"></div>
+    </div>
+  </div>
+
+  <!-- COMPARE TAB -->
+  <div id="tab-compare" class="tab-content">
+    <div class="compare-wrap">
+      <div class="compare-header">
+        <h2>Comparación de Líderes</h2>
+        <p>Promedio por dimensión basado en todas las evaluaciones acumuladas en tu Google Sheets.</p>
+      </div>
+      <div id="compareGrid" class="compare-grid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── CONFIG ──────────────────────────────────────────────
+const CLIENT_ID = '1031441548619-d1tdh73g0bj3ok0nthglfrcb2jvph7fi.apps.googleusercontent.com';
+const SHEET_ID  = '1omZxH7hIOtM4loRx_xgf4eovuTVog8Dds_OdorGwxNw';
+const SHEET_NAME = 'Evaluaciones';
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+
+// ─── DIMENSIONS & QUESTIONS ──────────────────────────────
+const DIMENSIONS = [
+  { id: 'comunicacion', label: 'Comunicación', color: '#2d7a4f',
+    questions: [
+      'El líder comunica los objetivos y expectativas de manera clara.',
+      'Escucha activamente a los miembros de su equipo.',
+      'Comparte información relevante de forma oportuna.'
+    ]
+  },
+  { id: 'decisiones', label: 'Toma de Decisiones', color: '#8b6914',
+    questions: [
+      'Toma decisiones basadas en información y análisis.',
+      'Consulta al equipo cuando la decisión les afecta directamente.',
+      'Asume responsabilidad por las decisiones tomadas.'
+    ]
+  },
+  { id: 'cambio', label: 'Gestión del Cambio', color: '#2d4a7a',
+    questions: [
+      'Gestiona las transiciones y cambios con claridad y dirección.',
+      'Apoya al equipo durante períodos de incertidumbre o transformación.',
+      'Adapta su estilo de liderazgo según el contexto.'
+    ]
+  },
+  { id: 'desarrollo', label: 'Desarrollo del Equipo', color: '#7a2d4a',
+    questions: [
+      'Brinda retroalimentación constructiva y frecuente.',
+      'Impulsa el crecimiento profesional de las personas a su cargo.',
+      'Delega responsabilidades que permiten aprender y crecer.'
+    ]
+  },
+  { id: 'respeto', label: 'Respeto y Colaboración', color: '#4a6e2d',
+    questions: [
+      'Promueve un ambiente de respeto y trato digno.',
+      'Fomenta la colaboración y el trabajo en equipo.',
+      'Reconoce y valora los aportes de cada miembro.'
+    ]
+  }
+];
+
+// Column headers for Sheets
+const HEADERS = ['Fecha', 'Líder', 'Organización', 'Rol Entrevistado',
+  ...DIMENSIONS.flatMap(d => d.questions.map((_, i) => `${d.label} P${i+1}`)),
+  ...DIMENSIONS.map(d => `Promedio ${d.label}`),
+  'Promedio Global', 'Notas'
+];
+
+// ─── AUTH STATE ───────────────────────────────────────────
+let accessToken = null;
+let allData = [];
+
+function signIn() {
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: (response) => {
+      if (response.error) { showToast('Error al iniciar sesión', true); return; }
+      accessToken = response.access_token;
+      onSignedIn();
+    }
+  });
+  client.requestAccessToken();
+}
+
+function onSignedIn() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('authArea').innerHTML = `
+    <div class="user-pill">✓ Conectado a Google Sheets</div>
+    <button class="btn-signout" onclick="signOut()">Salir</button>
+  `;
+  ensureHeaders();
+  buildForm();
+  document.getElementById('evalDate').value = new Date().toISOString().split('T')[0];
+}
+
+function signOut() {
+  accessToken = null;
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('authArea').innerHTML = `
+    <button class="google-btn" onclick="signIn()" style="padding:8px 16px;font-size:0.8rem;width:auto;border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#f0ece4;">
+      Iniciar sesión con Google
+    </button>
+  `;
+}
+
+// ─── SHEETS API ───────────────────────────────────────────
+async function sheetsRequest(endpoint, method = 'GET', body = null) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}${endpoint}`;
+  const opts = {
+    method,
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(url, opts);
+  if (!res.ok) throw new Error(`Sheets API error: ${res.status}`);
+  return res.json();
+}
+
+async function ensureHeaders() {
+  try {
+    const data = await sheetsRequest(`/values/${SHEET_NAME}!A1:A1`);
+    if (!data.values) {
+      // Sheet is empty, write headers
+      await sheetsRequest(`/values/${SHEET_NAME}!A1`, 'PUT', {
+        range: `${SHEET_NAME}!A1`,
+        majorDimension: 'ROWS',
+        values: [HEADERS]
+      });
+    }
+  } catch(e) {
+    // Sheet tab might not exist, try to create it
+    try {
+      await sheetsRequest('', 'POST', { // batchUpdate
+      });
+    } catch(_) {}
+    // Try writing headers anyway
+    try {
+      await sheetsRequest(`/values/${SHEET_NAME}!A1?valueInputOption=RAW`, 'PUT', {
+        range: `${SHEET_NAME}!A1`,
+        majorDimension: 'ROWS',
+        values: [HEADERS]
+      });
+    } catch(_) {}
+  }
+}
+
+async function appendRow(rowData) {
+  await sheetsRequest(
+    `/values/${SHEET_NAME}!A1:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
+    'POST',
+    { values: [rowData] }
+  );
+}
+
+async function loadData() {
+  const container = document.getElementById('tableContainer');
+  container.innerHTML = `<div class="status-bar info"><span class="spinner"></span> Cargando datos desde Google Sheets...</div>`;
+  try {
+    const data = await sheetsRequest(`/values/${SHEET_NAME}`);
+    const rows = data.values || [];
+    if (rows.length <= 1) { allData = []; }
+    else {
+      const headers = rows[0];
+      allData = rows.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = row[i] || '');
+        return obj;
+      });
+    }
+    renderTable();
+    renderCompare();
+  } catch(e) {
+    container.innerHTML = `<div class="status-bar error">Error al cargar datos. Verifica que la hoja "Evaluaciones" existe en tu Google Sheets.</div>`;
+  }
+}
+
+// ─── FORM ─────────────────────────────────────────────────
+function buildForm() {
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+  DIMENSIONS.forEach(dim => {
+    const block = document.createElement('div');
+    block.className = 'dimension-block';
+    block.innerHTML = `<div class="dimension-title">${dim.label}</div>`;
+    dim.questions.forEach((q, qi) => {
+      const qid = `${dim.id}_${qi}`;
+      const item = document.createElement('div');
+      item.className = 'question-item';
+      item.innerHTML = `
+        <div class="question-text">${q}</div>
+        <div class="likert-wrap">
+          <div class="likert-scale">
+            ${[1,2,3,4,5].map(v => `<button class="likert-btn" data-val="${v}" data-qid="${qid}" onclick="selectLikert('${qid}',${v},this)">${v}</button>`).join('')}
+          </div>
+          <div class="likert-labels">
+            <span class="likert-label">Muy deficiente</span>
+            <span class="likert-label">Excelente</span>
+          </div>
+        </div>
+      `;
+      block.appendChild(item);
+    });
+    container.appendChild(block);
+  });
+}
+
+function selectLikert(qid, val, btn) {
+  document.querySelectorAll(`[data-qid="${qid}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+async function saveEvaluation() {
+  const leaderName = document.getElementById('leaderName').value.trim();
+  const evalDate = document.getElementById('evalDate').value;
+  const role = document.getElementById('intervieweeRole').value.trim();
+  const org = document.getElementById('orgName').value.trim();
+  const notes = document.getElementById('notes').value.trim();
+
+  if (!leaderName) { showToast('Ingresa el nombre o código del líder', true); return; }
+  if (!evalDate) { showToast('Selecciona la fecha', true); return; }
+
+  const answers = {};
+  let allAnswered = true;
+  DIMENSIONS.forEach(dim => {
+    dim.questions.forEach((_, qi) => {
+      const qid = `${dim.id}_${qi}`;
+      const sel = document.querySelector(`.likert-btn.selected[data-qid="${qid}"]`);
+      if (!sel) allAnswered = false;
+      else answers[qid] = parseInt(sel.dataset.val);
+    });
+  });
+
+  if (!allAnswered) { showToast('Responde todas las preguntas', true); return; }
+
+  // Build row
+  const dimScores = DIMENSIONS.map(dim => {
+    const vals = dim.questions.map((_, qi) => answers[`${dim.id}_${qi}`]);
+    return vals.reduce((a,b) => a+b, 0) / vals.length;
+  });
+  const overall = dimScores.reduce((a,b) => a+b, 0) / dimScores.length;
+
+  const row = [
+    evalDate, leaderName, org, role,
+    ...DIMENSIONS.flatMap(dim => dim.questions.map((_, qi) => answers[`${dim.id}_${qi}`])),
+    ...dimScores.map(s => s.toFixed(2)),
+    overall.toFixed(2),
+    notes
+  ];
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Guardando...';
+
+  try {
+    await appendRow(row);
+    showToast('✓ Guardado en Google Sheets');
+    resetForm();
+  } catch(e) {
+    showToast('Error al guardar. Intenta nuevamente.', true);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Guardar en Google Sheets';
+  }
+}
+
+function resetForm() {
+  document.getElementById('leaderName').value = '';
+  document.getElementById('intervieweeRole').value = '';
+  document.getElementById('orgName').value = '';
+  document.getElementById('notes').value = '';
+  document.querySelectorAll('.likert-btn.selected').forEach(b => b.classList.remove('selected'));
+  document.getElementById('evalDate').value = new Date().toISOString().split('T')[0];
+}
+
+// ─── TABLE ────────────────────────────────────────────────
+function renderTable() {
+  const filterLeader = document.getElementById('filterLeader').value;
+  const leaders = [...new Set(allData.map(r => r['Líder']))].filter(Boolean).sort();
+
+  const sel = document.getElementById('filterLeader');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Todos los líderes</option>';
+  leaders.forEach(l => {
+    const opt = document.createElement('option');
+    opt.value = l; opt.textContent = l;
+    if (l === prev) opt.selected = true;
+    sel.appendChild(opt);
+  });
+
+  const filtered = filterLeader ? allData.filter(r => r['Líder'] === filterLeader) : allData;
+  const container = document.getElementById('tableContainer');
+
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>No hay evaluaciones registradas aún.</p></div>`;
+    return;
+  }
+
+  const sorted = [...filtered].sort((a,b) => new Date(b['Fecha']) - new Date(a['Fecha']));
+
+  container.innerHTML = `
+    <div class="table-wrap">
+      <table class="records-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Líder</th>
+            <th>Organización</th>
+            <th>Rol</th>
+            ${DIMENSIONS.map(d => `<th>${d.label}</th>`).join('')}
+            <th>Global</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sorted.map(r => `
+            <tr>
+              <td>${r['Fecha']}</td>
+              <td style="font-weight:500">${r['Líder']}</td>
+              <td style="color:var(--muted)">${r['Organización'] || '—'}</td>
+              <td style="color:var(--muted)">${r['Rol Entrevistado'] || '—'}</td>
+              ${DIMENSIONS.map(d => `<td>${scorePill(parseFloat(r[`Promedio ${d.label}`]) || 0)}</td>`).join('')}
+              <td>${scorePill(parseFloat(r['Promedio Global']) || 0)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function scorePill(score) {
+  const cls = score >= 4 ? 'score-high' : score >= 2.5 ? 'score-mid' : 'score-low';
+  return `<span class="score-pill ${cls}">${score.toFixed(2)}</span>`;
+}
+
+// ─── COMPARE ──────────────────────────────────────────────
+function renderCompare() {
+  const leaders = [...new Set(allData.map(r => r['Líder']))].filter(Boolean).sort();
+  const grid = document.getElementById('compareGrid');
+
+  if (!leaders.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">📊</div><p>Guarda evaluaciones para ver comparaciones.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = leaders.map(leader => {
+    const records = allData.filter(r => r['Líder'] === leader);
+    const count = records.length;
+    const overall = records.reduce((a,r) => a + (parseFloat(r['Promedio Global']) || 0), 0) / count;
+    const overallColor = overall >= 4 ? 'var(--success)' : overall >= 2.5 ? 'var(--accent2)' : 'var(--danger)';
+
+    const dimRows = DIMENSIONS.map(dim => {
+      const avg = records.reduce((a,r) => a + (parseFloat(r[`Promedio ${dim.label}`]) || 0), 0) / count;
+      const pct = (avg / 5) * 100;
+      return `
+        <div class="dim-bar-row">
+          <div class="dim-bar-label">
+            <span>${dim.label}</span>
+            <span>${avg.toFixed(1)}</span>
+          </div>
+          <div class="dim-bar-track">
+            <div class="dim-bar-fill" style="width:${pct}%;background:${dim.color}"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="leader-card">
+        <h3>${leader}</h3>
+        <p class="eval-count">${count} evaluación${count !== 1 ? 'es' : ''}</p>
+        ${dimRows}
+        <div class="overall-score">
+          <span>Promedio Global</span>
+          <span class="overall-num" style="color:${overallColor}">${overall.toFixed(2)}<span style="font-size:0.7rem;color:var(--muted)"> /5</span></span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── UI HELPERS ───────────────────────────────────────────
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  btn.classList.add('active');
+  if (tab === 'data') loadData();
+  if (tab === 'compare') loadData();
+}
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+</script>
+</body>
+</html>
